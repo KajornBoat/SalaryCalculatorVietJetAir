@@ -42,25 +42,63 @@
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
 
   <main class="form-signin w-100 m-auto">
-    <form>
+
+    <form id="login-form">
       <img class="mb-4" src="https://vzportal.merlot.aero/Common/Content/images/logo/VZ.png" alt="" width="300"
         height="70">
       <h1 class="h3 mb-3 fw-normal">Salary Calculator</h1>
 
       <div class="form-floating">
-        <input type="userId" class="form-control" id="userId" placeholder required>
-        <label for="floatingInput">User ID</label>
+        <input type="username" class="form-control" id="username" placeholder required>
+        <label for="floatingInput">Username</label>
       </div>
       <br>
       <div class="form-floating">
         <input type="password" class="form-control" id="password" placeholder required>
         <label for="floatingPassword">Password</label>
       </div>
+      <div class="is-valid" id="div-validate"></div>
+      <div class="invalid-feedback">
+        The username or password provided is incorrect
+      </div>
       <br>
+
+
       <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
 
     </form>
   </main>
+
+  <script>
+    let loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let username = document.getElementById("username");
+      let password = document.getElementById("password");
+      let payload = {
+        username: username.value,
+        password: password.value
+      }
+      var raw = JSON.stringify(payload);
+      fetch("http://" + window.location.host + "/login", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: raw,
+      }).then((response) => {
+        if(response.status == 200){
+          document.getElementById("div-validate").className = "is-valid"
+          window.location.href = "http://" + window.location.host
+        }
+        else if(response.status == 400){
+          document.getElementById("div-validate").className = "is-invalid"
+        }
+        else{
+          alert("This Webside is not support")
+        }
+      })
+
+    });
+  </script>
 
 </body>
 
