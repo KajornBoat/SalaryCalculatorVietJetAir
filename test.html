@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thai Vietjet Air - Crew.Portal</title>    
+    <link href="/Common/Content/css/global.css" type="text/css" rel="Stylesheet"/>
+    <link href="/Common/Content/css/common.css" type="text/css" rel="Stylesheet"/>
+                    <link href="/Common/Themes/mobile/theme.css" rel="stylesheet" type="text/css" />
+
+    <script src="/Common/Scripts/jquery-1.6.4.min.js" type="text/javascript"></script>
+    <script src="/Common/Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
+    <script src="/Common/Scripts/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="/Common/Scripts/jquery-ui-1.8.2.min.js" type="text/javascript"></script>
+    <script src="/Common/Scripts/jquery.purr.js" type="text/javascript"></script>
+    <script src="/Common/Scripts/site.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            $(".notice").purr({ usingTransparentPNG: true, isSticky: false });
+
+            $('#reload-config').click(function () {
+                $.get('/Common/Debug/ReloadConfig', function () {
+                    ReloadedConfigSuccess();
+                });
+            });
+            
+
+        });
+
+        function ReloadedConfigSuccess() {
+            $.get('/Common/Messages/ReloadedConfig', function (data) {
+                $(data).dialog({
+                    modal: true,
+                    width: 500,
+                    height: 100,
+                    title: "Configuration",
+                    close: function () {
+                        $(this).remove();
+                    }
+                });
+            });
+        }
+    </script>
+    
+</head>
+
+<body class="bgred">
+    <img id="reload-config" src="/Common/Content/images/update.png" width="16px" height="16px" style="position: fixed; top:5px; right:5px;" />
+        <div class="notice ui-corner-all">
+            <img src="/Common/Content/images/info.png" alt="" />
+            <h2>Validation Summary</h2>
+            <div class="validation-summary-errors" data-valmsg-summary="true"><ul><li>The user name or password provided is incorrect</li>
+</ul></div>
+        </div>
+    <div id="divLoading" style="display:none;">
+        <div>
+            <img src="/Common/Content/images/loading.gif" alt="" />
+        </div>
+    </div>
+    <div>
+        <div style="height:735px;" class="back-plane">
+            <div class="text-center">
+                
+            </div>
+            <div class="text-center">
+                <a href="/Common/"><img src="/Common/Content/images/logo/VZ.png" alt="0" class="AirLineLogo" /></a>
+            </div>
+            <div id="systemMessages">
+                
+    
+
+            </div>
+            <div class="LoginBox ui-corner-all">
+                <object id="AuthenticationControl" style='display: none' classid="CLSID:3B88796C-C0BD-458B-93D6-CDF7DFB30324"></object>  
+<object name='SmartCartAPI' style='display: none' id='SmartCardAPIDownload' classid='CLSID:A47C22B1-3CC3-45bc-801E-3FCC4FFD3E45' >
+</object>
+
+
+<script type="text/javascript">
+    var currentLanguage = "en";
+    var checkAuthenticationControl = false;
+    var cardReaderAllowed = false;
+    var portName = "";
+    var CardNo;
+    var getCardNumber;
+
+    var applicationToLogin = "Crew";
+
+
+    if (applicationToLogin == "Crew") {
+        // Check if ActiveXControl is installed
+        try {
+            var obj = new ActiveXObject("Merlot.Aero.ActiveXControl.AuthenticationControl");
+
+            if (obj.AuthenticateMachine()) {
+                checkAuthenticationControl = true;
+            }
+
+        } catch (ex) {
+            checkAuthenticationControl = false;
+        }
+
+        if (checkAuthenticationControl) {
+            if (window.localStorage) {
+                if (window.localStorage['port'] &&
+                    window.localStorage['port'] != "") {
+                    // Get the Authentication Rule
+                    portName = (window.localStorage['port']);
+
+                    // then Get the Authentication Method
+                    if (portName != "") {
+                        // Get Default Authentication Method
+                        getDefaultAuthMethod();
+                    }
+                }
+            }
+        }
+        else {
+            $("#credentialsLogon").toggle();
+        }
+    }
+    else {
+        $("#credentialsLogon").toggle();
+    }
+
+    function onCardLogon() {
+        $("#credentialsLogon").addClass("hidden");
+        $("#cardLogon").toggle();
+
+        onCardLogonVisible();
+    }
+
+    function onCredentialsLogon() {
+        clearInterval(getCardNumber);
+
+        $("#cardLogon").toggle();
+        $("#credentialsLogon").removeClass("hidden");
+    }
+
+    function checkReader() {
+        try {
+            var objDownloadAPI = new ActiveXObject("SmartCard.Download");
+            // Card Reader is allowed if activexcontrol is installed
+            cardReaderAllowed = true;
+
+            if (cardReaderAllowed) {
+                $("#linkCardReader").removeClass("hidden");
+            }
+        }
+        catch (ex) {
+            cardReaderAllowed = false;
+        }
+
+    }
+
+    function getDefaultAuthMethod() {
+        $('#divLoading').show();
+        $.ajax({
+            type: "POST",
+            url: '/Common/Account/GetDefaultAuthMethod',
+            headers: {
+                'RequestVerificationToken': 'ItAPvQqRpXa4wSZPAu63bLkKREx5NiB9zoOW5IvyR8tvWSXsNUAt7opcIRhY0kKi8scXZqzGKCrALMwkNNoQfIWEt-U1:wWixLnxxNNr9S9kFtBry-KOwxh8PCeJMJQEoXDXhNGtxrMKrNc3POnPthn1ydulJ8dI7iqF9DP7iOxCBP214_NI-7PU1'
+            },
+            data: { portCode: portName },
+            success: function (data) {
+                $('#divLoading').hide();
+                if (data == "IDPassword") {
+                    $("#credentialsLogon").removeClass("hidden");
+
+                    // Check if HID Reader is allowed
+                    checkReader();
+                }
+                else {
+                    onCardLogon();
+                }
+            }
+        });
+    }
+
+    //#### Mifare Reader ActiveX function to reader staff card number ####//
+    function GetSmartCard() {
+        try {
+            var objDownloadAPI = new ActiveXObject("SmartCard.Download");
+            CardNo = objDownloadAPI.GetSmartCardNumber();
+
+            //####[0] - Invalid Card / Unknown Error
+            if (CardNo != 0) {
+                //#### Check Staff Exist in Database and Blacklist status
+                CheckStaffStatus(CardNo);
+            }
+        }
+        catch (ex) {
+            alert("Error: " + ex.message);
+        }
+    }
+
+    //#### Check Staff Exist in Database and Blacklist status
+    function CheckStaffStatus(CardNo) {
+        clearInterval(getCardNumber);
+
+        $.ajax({
+            type: "POST",
+            url: '/Common/Account/CheckStaffStatus',
+            headers: {
+                'RequestVerificationToken': 'aZHMNlYobXxnWGfZtsU3pKwalFDhwxe0GudHIDXZ8X5PiyG8RCKiJehcOZ-mqhh8U48Ouy_tiarcTAYELpl2I2GsRxc1:tmLz5rnK5K2Wsngxl20yWKB6wsadrHDLBAP2OkPgePgZ5RqD84G1TY3J_9n_Z2x-YQP61dYW7O1EFuU585Crxhx8sxU1'
+            },
+            data: { cardNumber: CardNo },
+            success: function (data) {
+                var message = "";
+
+                if (data == 0) {
+                    message = "Unknown Error!"
+                }
+                else if (data == 1) {
+                    message = "Staff Not Found!";
+                }
+                else if (data == 2) {
+                    message = "Staff Blacklisted!";
+                }
+                else {
+
+                    $("#cardLogon").append('<input type= "hidden" name= "UserName" value= "' + data + '"/>');
+                    $("#cardLogon").append('<input type= "hidden" name= "IsCardAuthentication" value= "true"/>');
+                    $("#credentialsLogonLink").addClass("hidden");
+                    $('form')[0].submit();
+                }
+
+                if (message != "") {
+                    onCardLogonVisible();
+
+                    $(GetMessageViewer('/Common/Content/images/info.png', [message])).purr({ usingTransparentPNG: true, isSticky: false });
+                }
+            }
+        });
+    }
+
+    function onCardLogonVisible() {
+        getCardNumber = setInterval(function () { GetSmartCard() }, 1000);
+    }
+
+    function GetMessageViewer(imageUrl, messages) {
+        if (imageUrl == null) imageUrl = messageInfoIconUrl;
+        var notice = '<div class="notice ui-corner-all" style="display: block;">'
+            + '<img alt="" src="' + imageUrl + '"/>'
+            + '<h2>Validation Summary</h2>'
+            + '<div class="validation-summary-errors">'
+            + '<ul>';
+        for (var i = 0; i < messages.length; i++)
+            notice += '<li>' + messages[i] + '</li>';
+        notice += '</ul>'
+            + '</div>'
+            + '<a class="close" href="#close">Close</a>'
+            + '</div>';
+        return notice;
+    }
+
+    function onLogin() {
+        $("#linkCardReader").addClass("hidden");
+    }
+
+</script>
+
+
+
+
+<form action="/common/Account/LogOn?app=Crew&amp;ReturnUrl=%2fCrew/" method="post"><input name="__RequestVerificationToken" type="hidden" value="wU086AsUhq6P8_PA_GUb-L4amNzOukNC0KWDchPHnC3rr-OZQ1D0jiWklIcJiMDtw0KR22M1X3UT174zGoqgB2u4bsM1" />    <div id="disablingDiv" ></div>
+    <div class="Header HeaderTextColor LogOn">Welcome to Thai Vietjet Air</div>
+    <div id="loginDiv">
+        <div id="cardLogon" class="hidden">                   
+            <div class="Header HeaderTextColor"> Please place card on the card reader...</div>            
+            <div style="padding-top : 70px;"><a id="credentialsLogonLink" href="javascript:void(0)" onclick="onCredentialsLogon()" class="smallLink">Use my User id and password...</a></div>            
+        </div>
+
+        <div id="credentialsLogon">
+            <table cellpadding="2" cellspacing="2">
+                <tr>
+                    <td colspan="2" class="labelAccount title">Crew.Portal</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="labelAccount">USER ID:</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input autofocus="True" class="textbox tsize" data-val="true" data-val-required="The USER ID: field is required." id="UserName" name="UserName" type="text" value="fdsg" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="labelAccount">PASSWORD:</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input class="textbox tsize" id="Password" name="Password" type="password" /></td>
+                </tr>
+                <tr>
+                    <td align="left" id="linkCardReader" class="hidden"><a href="javascript:void(0)" onclick="onCardLogon()" class="smallLink">Use my card...</a></td>
+                    <td align="left" class="linkForgotPassword"><a class="smallLink" href="/Common/Account/ForgotPassword">Forgot your Password?</a></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="ddlLanguage" name="ddlLanguage" onchange="changeLanguage(this)"><option selected="selected" value="en">English</option>
+<option value="zh-CHS">中文（简体）</option>
+<option value="zh-CHT">中文（繁體）</option>
+<option value="fr">Fran&#231;ais</option>
+<option value="hi">हिन्दी</option>
+<option value="id">bahasa Indonesia</option>
+<option value="ja">日本語</option>
+<option value="ko">한국어</option>
+<option value="es">Espa&#241;ol</option>
+<option value="th">ภาษาไทย</option>
+<option value="vi">tiếng Việt</option>
+</select>
+                            <img class="MerlotRed" onclick='setThemeCookie("merlotRed")' />
+                            <img class="MerlotGreen" onclick='setThemeCookie("merlotGreen")' />
+                    </td>
+                    <td class="login-button-td">
+                        <div>
+                            <input type="submit" class="button" style="width: auto;" value="Login" onclick="onLogin()" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+    <script type="text/javascript">
+        function changeLanguage(lang) {
+            var langCode = lang.value;
+            $.ajax({
+                type: "POST",
+                url: '/Common/Account/SetSessionLanguage',
+                headers: {
+                    'RequestVerificationToken': 'D9xtLKnzC_zlkjbemmR99hANzAmHeUVQlsieLmA6DBk59dvIwmInOd3JRRj9l9fu1pZsV6jWbbo5RnlbLOEQgXpn3og1:BspJkbqx_yfl02anoCei_gerAS9783uF6PDCisHksIl39joZ9XmzKEjO0UTx16FS6yvO7AbNx1OImZ9tbHXIwZIzcwU1'
+                },
+                data: { languageCode: langCode },
+                success: function () {
+                    currentLanguage = langCode;
+                    window.location.replace(window.location.href);
+                }
+            });
+        }
+
+        if (checkAuthenticationControl) {
+            $("#loginDiv").append('<input type= "hidden" name= "PortCode" value= "' + portName + '"/>');
+            $("#loginDiv").append('<input type= "hidden" name= "UseAuthenticationRule" value= "true"/>');
+        }
+
+        function setThemeCookie(theme) {
+            switch (theme) {
+                case "merlotRed":
+                    document.cookie = "theme=merlotRed; max-age=‭31536000‬; path=/";
+                    location.reload();
+                    break;
+                case "merlotGreen":
+                    document.cookie = "theme=merlotGreen; max-age=‭31536000‬; path=/";
+                    location.reload();
+                    break;
+                default:
+                    document.cookie = "theme=mobile; max-age=‭31536000‬; path=/";
+                    location.reload();
+            }
+        }
+    </script>    
+</form>
+            </div>
+            <div style="text-align:center;position:relative;top:37px;z-index:0;">
+                <div class="smallContent footerLoginSection">
+                    <span class="powered-by-text">POWERED BY</span>
+                    <a href="/Common/" class="powered-by-image"></a>
+                </div>
+                <div class="smallContent footerLoginSection">Version: 2023.10 (2023.10.0.8)</div>
+                <div class="smallContent footerLoginSection"><a class="smallContent footerLoginSection" target="_blank" href=""></a></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
