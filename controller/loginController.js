@@ -149,14 +149,6 @@ const getSectorLists = (html) => {
     return result
 }
 
-const getReportResult = (html) => {
-    const { document } = (new JSDOM(html)).window;
-    let tfoot = document.querySelectorAll('body > table')[0]
-    // tfoot.parentElement.removeChild(tfoot)
-    document.removeChild(tfoot)
-    return document.documentElement.innerHTML
-}
-
 
 const main = async () => {
     console.log("test controller")
@@ -167,23 +159,7 @@ const main = async () => {
     // let data = getSectorLists(reportHTML)
     // console.log(report)
 
-    return getReportResult(reportHTML)
-
-    // return new Promise((resolve, reject) => {
-    //     let options = {
-    //         'method': 'GET',
-    //         'url': 'https://vzportal.merlot.aero/Crew/?param=' + res_login.param,
-    //         'headers': {
-    //             'Cookie': res_login.cookie
-    //         }
-    //     };
-    //     request(options, (error, response, body) => {
-    //         if (error)
-    //             console.error('error getcookie:', error);
-    //         // console.log('statusCode:', response && response.statusCode);
-    //         return resolve(body)
-    //     })
-    // })
+    return reportHTML
 
 }
 module.exports = main 

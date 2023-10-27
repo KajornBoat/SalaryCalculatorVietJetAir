@@ -12,11 +12,11 @@ router.get('/', function (req, res, next) {
 router.get('/login', async (req, res) => {
   body = await loginController()
   // console.log(req.query.username)
-  fs.writeFile('Output.html', body, (err) => {
+  // fs.writeFile('Output.html', body, (err) => {
 
-    // In case of a error throw err. 
-    if (err) throw err;
-  })
+  //   // In case of a error throw err. 
+  //   if (err) throw err;
+  // })
   res.send(body)
 });
 
