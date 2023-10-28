@@ -1,18 +1,19 @@
-var express = require('express');
-var router = express.Router();
-
+const express = require('express');
+const router = express.Router();
 
 const fs = require('fs');
 
 const loginController = require('../controller/Login.controller')
 const reportController = require('../controller/Report.controller')
 
+const dataJson = require('../views/data.json')
+
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   // console.log(req.cookies)
   if (await loginController.checkCookieAvalible(req.cookies.AUTH) && req.cookies.AUTH) {
-    let report = await reportController.main(req.cookies.AUTH)
-    res.send(report)
+    // let report = await reportController.main(req.cookies.AUTH)
+    res.render('report')
   }
   else
     res.redirect("login")
@@ -34,13 +35,19 @@ router.post('/login', async (req, res) => {
 
 router.get('/test', async (req, res) => {
 
-  fs.readFile('views/reportTemp.txt', (err, data) => {
-    if (err) throw err; 
-    reportHTML = data.toString()
-    // console.log(reportHTML);
-    let dataJson = reportController.extractReport(reportHTML)
-    res.send(dataJson)
-  })
+  // fs.readFile('views/reportTemp.txt', (err, data) => {
+  //   if (err) throw err; 
+  //   reportHTML = data.toString()
+  //   // console.log(reportHTML);
+  //   let dataJson = reportController.extractReport(reportHTML)
+  //   res.send(dataJson)
+  // })
+  res.render('report')
+});
+router.get('/dataJson', async (req, res) => {
+
+  res.json(dataJson)
+  // res.sendStatus(200)
 });
 
 module.exports = router;

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Salary Calculator VeitJet Thailand</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#712cf9">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+    </style>
+</head>
+
+<body class="bg-body-tertiary">
+
+    <div class="container">
+        <main>
+            <br>
+            <div class="container">
+                <h2>AMITA SUKPHAN</h2>
+                <p class="lead">Employee Code : TVJ2019</p>
+            </div>
+
+            <hr>
+            <div class="row g-5">
+
+                <div class="col-md-7 col-lg-8">
+                    <!-- Select Date -->
+                    <form id="select-date">
+                        <h4 class="mb-3">Select Date</h4>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="date-from" class="form-label">From</label>
+                                <input type="date" class="form-control" id="date-from" required>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="date-to" class="form-label">To</label>
+                                <input type="date" class="form-control" id="date-to" required>
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <!-- Summary Report -->
+                    <form>
+                        <h4 class="mb-3">Sumary Report</h4>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label">Total Flight Times (hrs : min)</label>
+                                <!-- <input type="number" class="form-control" id="date-from" required> -->
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="number" class="form-control text-center" id="total_times_hours"
+                                            required />
+                                    </div>
+                                    <p class="col-sm-1 text-center">:</p>
+                                    <div class="col">
+                                        <input type="number" class="form-control text-center" id="total_times_min"
+                                            required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="total_sector" class="form-label">Total Sector</label>
+                                <input type="number" class="form-control" id="total_sector" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="total_working_day" class="form-label">Total Working Day</label>
+                                <input type="number" class="form-control" id="total_working_day" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="total_layover_day" class="form-label">Total Layover Days</label>
+                                <input type="number" class="form-control" id="total_layover_day" required>
+                            </div>
+                        </div>
+                        <!-- <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button> -->
+                        <br>
+                    </form>
+
+                    <!-- Setting -->
+                    <form>
+                        <h4 class="mb-3">Setting</h4>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="setting_basicSalary" class="form-label">Basic salary</label>
+                                <input type="number" class="form-control" id="setting_basicSalary" required
+                                    value="12000">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_productivity" class="form-label">Productivity</label>
+                                <input type="number" class="form-control" id="setting_productivity" required
+                                    value="7000">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_hours_0_70" class="form-label">Allowances Per Hours (0-70)</label>
+                                <input type="number" class="form-control" id="setting_hours_0_70" required value="200">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_hours_above_70" class="form-label">Allowances Per Hours (above
+                                    70)</label>
+                                <input type="number" class="form-control" id="setting_hours_above_70" required
+                                    value="300">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_sector" class="form-label">Allowances Per Sector</label>
+                                <input type="number" class="form-control" id="setting_sector" required value="200">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_trans_meal" class="form-label">Transportationo ane Meal Allowances
+                                    Per Day</label>
+                                <input type="number" class="form-control" id="setting_trans_meal" required value="550">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="setting_layover" class="form-label">Layover Allowances Per Day</label>
+                                <input type="number" class="form-control" id="setting_layover" required value="2300">
+                            </div>
+
+                        </div>
+                        <!-- <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button> -->
+                        <br>
+                    </form>
+                </div>
+
+                <!-- Income -->
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-primary" id="income">Income</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Basic salary</h6>
+                                <!-- <br> -->
+                            </div>
+                            <span class="text-body-secondary" id="income_basicSalary">12,000฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Productivity Allowances</h6>
+                                <!-- <br> -->
+                            </div>
+                            <span class="text-body-secondary" id="income_productivity">7,000฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Flight Hours Allowances</h6>
+                                <small class="text-body-secondary" id="incomm_flight_0_70">1-70 (70 hrs)</small>
+                                <br>
+                                <small class="text-body-secondary" id="incomm_flight_above_70">above 70 (7:2
+                                    hrs:min)</small>
+                            </div>
+                            <span class="text-body-secondary" id="income_flight">5฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Sector Allowances</h6>
+                                <small id="income_sector_text">58 sec</small>
+                            </div>
+                            <span class="text-success" id="income_sector">5฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Transportationo and Meal Allowances</h6>
+                                <small id="income_working_text">20 working days</small>
+                            </div>
+                            <span class="text-success" id="income_working">5฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Layover Allowances</h6>
+                                <small id="income_layover_text">1 layover days</small>
+                            </div>
+                            <span class="text-success" id="income_layover">5฿</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between text-success">
+                            <!-- <span>Total (THB)</span> -->
+                            <h6 class="my-0">Total (THB)</h6>
+                            <strong id="income_total">20฿</strong>
+                        </li>
+                        <br>
+                        <span style="color: red;">* Not Include In-Flight Sale Commission Allowances</span>
+                    </ul>
+
+                </div>
+            </div>
+        </main>
+        <br>
+
+    </div>
+
+    <div class="b-example-divider"></div>
+    <!-- Report -->
+    <div class="container table-responsive ">
+        <br>
+        <h2>Report</h2>
+        <br>
+        <table class="table table-striped  table-bordered">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Report</th>
+                    <th scope="col">Flight Time</th>
+                    <th scope="col">Sector(s)/Event(s)</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>Sun 01-Oct</td>
+                    <td>05:10</td>
+                    <td>5:15</td>
+                    <td>- 620 BKK 6:05 L SIN 9:30 L
+                        <br>
+                        - 621 SIN 10:41 L BKK 12:31 L
+                    </td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+                <!-- <tr>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>Handle</th>
+                </tr> -->
+            </tfoot>
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+    <script>
+        var dataReport = {}
+
+        let selectDateForm = document.getElementById('select-date')
+        selectDateForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            fetch("http://" + window.location.host + "/dataJson", {
+                method: "GET",
+            }).then((response) => response.json()).then(data => {
+                writeSumaryReport(data)
+                writeIncome()
+            })
+        })
+        const writeSumaryReport = (data) => {
+            document.getElementById('total_times_hours').value = data.total.flightTimes.hour
+            document.getElementById('total_times_min').value = data.total.flightTimes.min
+            document.getElementById('total_sector').value = data.total.sector
+            document.getElementById('total_working_day').value = data.total.days
+            document.getElementById('total_layover_day').value = data.total.layover
+        }
+        const writeIncome = () => {
+
+            let summary = {
+                hour: document.getElementById('total_times_hours').value,
+                min: document.getElementById('total_times_min').value,
+                sectors: document.getElementById('total_sector').value,
+                workingDay: document.getElementById('total_working_day').value,
+                layover: document.getElementById('total_layover_day').value,
+            }
+            let setting = {
+
+                hours_0_70: document.getElementById('setting_hours_0_70').value,
+                hours_above_70: document.getElementById('setting_hours_above_70').value,
+                sector: document.getElementById('setting_sector').value,
+                workingDay: document.getElementById('setting_trans_meal').value,
+                layover: document.getElementById('setting_layover').value,
+            }
+
+            let income = {
+                basicSalary: document.getElementById('setting_basicSalary').value,
+                productivity: document.getElementById('setting_productivity').value,
+                flight: calculate_flight_income(),
+                sector: summary.sectors * setting.sector,
+                working: summary.workingDay * setting.workingDay,
+                layover: summary.layover * setting.layover
+            }
+            let incomeTotal = 0
+            for (let i in income) {
+                incomeTotal += parseInt(income[i])
+            }
+
+           
+            document.getElementById("income_basicSalary").innerHTML = toStringIncome(income.basicSalary)
+            document.getElementById("income_productivity").innerHTML = toStringIncome(income.productivity)
+            document.getElementById("income_flight").innerHTML = toStringIncome(income.flight)
+            document.getElementById("income_sector").innerHTML = toStringIncome(income.sector)
+            document.getElementById("income_working").innerHTML = toStringIncome(income.working)
+            document.getElementById("income_layover").innerHTML = toStringIncome(income.layover)
+            document.getElementById("income_total").innerHTML = toStringIncome(incomeTotal)
+        
+            function calculate_flight_income(){
+                let result = 0
+                let total_min = parseInt(summary.hour)*60 + parseInt(summary.min)
+                
+                if(total_min > 70*60){
+                    result += 70*parseInt(setting.hours_0_70)
+                    result += parseInt((total_min-(70*60))*parseInt(setting.hours_above_70)/60)
+                }
+                else{
+                    result += parseInt(total_min*parseInt(setting.hours_0_70)/60)
+                }
+                return result
+            }
+        }
+        const toStringIncome = (num) => {
+            num = String(num)
+            return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '฿'
+        }
+
+    </script>
+
+</body>
+
+</html>
