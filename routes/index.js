@@ -10,9 +10,8 @@ const dataJson = require('../views/data.json')
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-  // console.log(req.cookies)
+  // console.log("GET /")
   if (await loginController.checkCookieAvalible(req.cookies.AUTH) && req.cookies.AUTH) {
-    // let report = await reportController.main(req.cookies.AUTH)
     res.render('report')
   }
   else
@@ -44,6 +43,15 @@ router.get('/test', async (req, res) => {
   // })
   res.render('report')
 });
+router.get('/data', async (req, res) => {
+  // console.log("Get /data : from ", req.query.from, 'to ', req.query.to)
+  if (await loginController.checkCookieAvalible(req.cookies.AUTH) && req.cookies.AUTH) {
+    let data = await reportController.getDataJson({ from: req.query.from, to: req.query.to }, req.cookies.AUTH)
+    res.json(data)
+  }
+  else
+    res.sendStatus(403)
+})
 router.get('/dataJson', async (req, res) => {
 
   res.json(dataJson)

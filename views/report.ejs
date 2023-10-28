@@ -60,7 +60,7 @@
                     <hr class="my-4">
 
                     <!-- Summary Report -->
-                    <form>
+                    <form onsubmit="return false" id="sumary-form">
                         <h4 class="mb-3">Sumary Report</h4>
                         <div class="row g-3">
                             <div class="col-sm-6">
@@ -69,26 +69,26 @@
                                 <div class="row">
                                     <div class="col">
                                         <input type="number" class="form-control text-center" id="total_times_hours"
-                                            required />
+                                            required value="0" />
                                     </div>
                                     <p class="col-sm-1 text-center">:</p>
                                     <div class="col">
                                         <input type="number" class="form-control text-center" id="total_times_min"
-                                            required />
+                                            required value="0" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <label for="total_sector" class="form-label">Total Sector</label>
-                                <input type="number" class="form-control" id="total_sector" required>
+                                <input type="number" class="form-control" id="total_sector" required value="0">
                             </div>
                             <div class="col-sm-6">
                                 <label for="total_working_day" class="form-label">Total Working Day</label>
-                                <input type="number" class="form-control" id="total_working_day" required>
+                                <input type="number" class="form-control" id="total_working_day" required value="0">
                             </div>
                             <div class="col-sm-6">
                                 <label for="total_layover_day" class="form-label">Total Layover Days</label>
-                                <input type="number" class="form-control" id="total_layover_day" required>
+                                <input type="number" class="form-control" id="total_layover_day" required value="0">
                             </div>
                         </div>
                         <!-- <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button> -->
@@ -96,7 +96,7 @@
                     </form>
 
                     <!-- Setting -->
-                    <form>
+                    <form id="setting-form">
                         <h4 class="mb-3">Setting</h4>
                         <div class="row g-3">
                             <div class="col-sm-6">
@@ -147,53 +147,53 @@
                     <ul class="list-group mb-3">
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
-                                <h6 class="my-0">Basic salary</h6>
+                                <h6 class="my-0">Basic Salary</h6>
                                 <!-- <br> -->
                             </div>
-                            <span class="text-body-secondary" id="income_basicSalary">12,000฿</span>
+                            <span class="text-body-secondary" id="income_basicSalary">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">Productivity Allowances</h6>
                                 <!-- <br> -->
                             </div>
-                            <span class="text-body-secondary" id="income_productivity">7,000฿</span>
+                            <span class="text-body-secondary" id="income_productivity">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">Flight Hours Allowances</h6>
-                                <small class="text-body-secondary" id="incomm_flight_0_70">1-70 (70 hrs)</small>
+                                <small class="text-body-secondary" id="incomm_flight_0_70">1-70 Hours (0฿)</small>
                                 <br>
-                                <small class="text-body-secondary" id="incomm_flight_above_70">above 70 (7:2
-                                    hrs:min)</small>
+                                <small class="text-body-secondary" id="incomm_flight_above_70">above 70 Hours
+                                    (0฿)</small>
                             </div>
-                            <span class="text-body-secondary" id="income_flight">5฿</span>
+                            <span class="text-body-secondary" id="income_flight">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">Sector Allowances</h6>
-                                <small id="income_sector_text">58 sec</small>
+                                <small id="income_sector_text">0 sec</small>
                             </div>
-                            <span class="text-success" id="income_sector">5฿</span>
+                            <span class="text-body-secondary" id="income_sector">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">Transportationo and Meal Allowances</h6>
-                                <small id="income_working_text">20 working days</small>
+                                <small id="income_working_text">0 working days</small>
                             </div>
-                            <span class="text-success" id="income_working">5฿</span>
+                            <span class="text-body-secondary" id="income_working">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">Layover Allowances</h6>
-                                <small id="income_layover_text">1 layover days</small>
+                                <small id="income_layover_text">0 layover days</small>
                             </div>
-                            <span class="text-success" id="income_layover">5฿</span>
+                            <span class="text-body-secondary" id="income_layover">0฿</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between text-success">
                             <!-- <span>Total (THB)</span> -->
                             <h6 class="my-0">Total (THB)</h6>
-                            <strong id="income_total">20฿</strong>
+                            <strong id="income_total">0฿</strong>
                         </li>
                         <br>
                         <span style="color: red;">* Not Include In-Flight Sale Commission Allowances</span>
@@ -256,7 +256,10 @@
         let selectDateForm = document.getElementById('select-date')
         selectDateForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            fetch("http://" + window.location.host + "/dataJson", {
+            let dateFromValue = document.getElementById("date-from").value
+            let dateToValue = document.getElementById("date-to").value
+
+            fetch("http://" + window.location.host + "/data"+`?from=${dateFromValue}&to=${dateToValue}`, {
                 method: "GET",
             }).then((response) => response.json()).then(data => {
                 writeSumaryReport(data)
@@ -273,24 +276,24 @@
         const writeIncome = () => {
 
             let summary = {
-                hour: document.getElementById('total_times_hours').value,
-                min: document.getElementById('total_times_min').value,
-                sectors: document.getElementById('total_sector').value,
-                workingDay: document.getElementById('total_working_day').value,
-                layover: document.getElementById('total_layover_day').value,
+                hour: parseInt(document.getElementById('total_times_hours').value),
+                min: parseInt(document.getElementById('total_times_min').value),
+                sectors: parseInt(document.getElementById('total_sector').value),
+                workingDay: parseInt(document.getElementById('total_working_day').value),
+                layover: parseInt(document.getElementById('total_layover_day').value),
             }
             let setting = {
 
-                hours_0_70: document.getElementById('setting_hours_0_70').value,
-                hours_above_70: document.getElementById('setting_hours_above_70').value,
-                sector: document.getElementById('setting_sector').value,
-                workingDay: document.getElementById('setting_trans_meal').value,
-                layover: document.getElementById('setting_layover').value,
+                hours_0_70: parseInt(document.getElementById('setting_hours_0_70').value),
+                hours_above_70: parseInt(document.getElementById('setting_hours_above_70').value),
+                sector: parseInt(document.getElementById('setting_sector').value),
+                workingDay: parseInt(document.getElementById('setting_trans_meal').value),
+                layover: parseInt(document.getElementById('setting_layover').value),
             }
 
             let income = {
-                basicSalary: document.getElementById('setting_basicSalary').value,
-                productivity: document.getElementById('setting_productivity').value,
+                basicSalary: parseInt(document.getElementById('setting_basicSalary').value),
+                productivity: parseInt(document.getElementById('setting_productivity').value),
                 flight: calculate_flight_income(),
                 sector: summary.sectors * setting.sector,
                 working: summary.workingDay * setting.workingDay,
@@ -301,7 +304,6 @@
                 incomeTotal += parseInt(income[i])
             }
 
-           
             document.getElementById("income_basicSalary").innerHTML = toStringIncome(income.basicSalary)
             document.getElementById("income_productivity").innerHTML = toStringIncome(income.productivity)
             document.getElementById("income_flight").innerHTML = toStringIncome(income.flight)
@@ -309,25 +311,60 @@
             document.getElementById("income_working").innerHTML = toStringIncome(income.working)
             document.getElementById("income_layover").innerHTML = toStringIncome(income.layover)
             document.getElementById("income_total").innerHTML = toStringIncome(incomeTotal)
-        
-            function calculate_flight_income(){
+
+            document.getElementById("income_sector_text").innerHTML = summary.sectors + ' sec';
+            document.getElementById("income_working_text").innerHTML = summary.workingDay + ' working days';
+            document.getElementById('income_layover_text').innerHTML = summary.layover + ' layover days';
+
+            function calculate_flight_income() {
                 let result = 0
-                let total_min = parseInt(summary.hour)*60 + parseInt(summary.min)
-                
-                if(total_min > 70*60){
-                    result += 70*parseInt(setting.hours_0_70)
-                    result += parseInt((total_min-(70*60))*parseInt(setting.hours_above_70)/60)
+                let total_min = parseInt(summary.hour) * 60 + parseInt(summary.min)
+
+                if (total_min > 70 * 60) {
+                    let income1 = 70 * parseInt(setting.hours_0_70)
+                    let income2 = parseInt((total_min - (70 * 60)) * parseInt(setting.hours_above_70) / 60)
+                    result = income1 + income2
+                    document.getElementById("incomm_flight_0_70").innerHTML = "1-70 Hours (" + toStringIncome(income1) + ")"
+                    document.getElementById("incomm_flight_above_70").innerHTML = `above 70 Hours (${toStringIncome(income2)})`
+                    document.getElementById("incomm_flight_above_70").hidden = false
                 }
-                else{
-                    result += parseInt(total_min*parseInt(setting.hours_0_70)/60)
+                else {
+                    result += parseInt(total_min * parseInt(setting.hours_0_70) / 60)
+                    document.getElementById("incomm_flight_0_70").innerHTML = `1-70 Hours (${toStringIncome(result)})`
+                    document.getElementById("incomm_flight_above_70").hidden = true
                 }
                 return result
             }
+            function toStringIncome(num) {
+                num = String(num)
+                return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '฿'
+            }
         }
-        const toStringIncome = (num) => {
-            num = String(num)
-            return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '฿'
+
+
+        let sumaryForm = document.getElementById('sumary-form')
+        let settingForm = document.getElementById("setting-form")
+
+        const onChangeInput = (e) => {
+            writeIncome()
         }
+        sumaryForm.onkeyup = onChangeInput
+        settingForm.onkeyup = onChangeInput
+
+        writeIncome()
+
+        const onChangeDate = () => {
+            let dateFromValue = document.getElementById("date-from").value
+            let dateToValue = document.getElementById("date-to").value
+            if (dateFromValue != '' && dateToValue != "") {
+                if (new Date(dateFromValue) > new Date(dateToValue)) {
+                    document.getElementById("date-from").value = dateToValue
+                    document.getElementById("date-to").value = ''
+                }
+            }
+        }
+        document.getElementById("date-from").onchange = onChangeDate
+        document.getElementById("date-to").onchange = onChangeDate
 
     </script>
 

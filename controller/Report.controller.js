@@ -42,7 +42,11 @@ const getFormPayloadRequest = (cookie) => {
     });
 }
 
-const getReportHTML = (formPayload) => {
+const getReportHTML = (date, formPayload) => {
+    let from = date.from.split('-')
+    let to = date.to.split("-")
+    from = from[1] + '-' + from[2] + '-' + from[0]
+    to = to[1] + '-' + to[2] + '-' + to[0]
     return new Promise((resolve, reject) => {
         let options = {
             'method': 'GET',
@@ -50,8 +54,8 @@ const getReportHTML = (formPayload) => {
             formData: {
                 'ReportName': '/Crew/rptEmployeeRosterReport',
                 'ReturnPDF': 'true',
-                'StartDate': '10-01-2023',
-                'EndDate': '10-31-2023',
+                'StartDate': from,
+                'EndDate': to,
                 'Employee': formPayload.Employee,
                 'ShowUnpublished': 'false',
                 'AuthToken': formPayload.AuthToken,
@@ -82,8 +86,8 @@ const extractReport = (reportHTML) => {
             }
 
         },
-        data: []
-        
+        data: [],
+        tableHtml: ""
     }
     const { document } = (new JSDOM(reportHTML)).window;
     //Extract Head
@@ -132,28 +136,34 @@ const extractReport = (reportHTML) => {
     let layover = 0
     let checkLayover = false
 
-    for(let i in data.data){
+    for (let i in data.data) {
         total_sector += data.data[i].sector.length
-        if(data.data[i].sector.length > 0) total_days += 1
+        if (data.data[i].sector.length > 0) total_days += 1
         //Layover
-        if(data.data[i].to != '' && data.data[i].from != '' && checkLayover){
+        if (data.data[i].to != '' && data.data[i].from != '' && checkLayover) {
             data.total.layover += layover
             layover = 0
             checkLayover = false
         }
-        if(data.data[i].to != ''){
+        if (data.data[i].to != '') {
             layover = 0
             checkLayover = true
         }
-        if(checkLayover) layover += 1
+        if (checkLayover) layover += 1
     }
     data.total.sector = total_sector
     data.total.days = total_days
-    
+    data.tableHtml = docBody.querySelector('td > table').innerHTML
+
     return data
 
 }
-
+const getDataJson = async (date, cookie) => {
+    let fromPayload = await getFormPayloadRequest(cookie)
+    let reportHTML = await getReportHTML(date, fromPayload)
+    let dataJson = extractReport(reportHTML)
+    return dataJson
+}
 const main = async (cookie) => {
     let fromPayload = await getFormPayloadRequest(cookie)
     let reportHTML = await getReportHTML(fromPayload)
@@ -162,4 +172,4 @@ const main = async (cookie) => {
     return reportHTML
 }
 
-module.exports = { main, extractReport }
+module.exports = { main, extractReport, getDataJson }
