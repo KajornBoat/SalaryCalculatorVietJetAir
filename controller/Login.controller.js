@@ -1,4 +1,6 @@
 const request = require('request');
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 const getCookie = (username, password) => {
     return new Promise((resolve, reject) => {
@@ -40,12 +42,12 @@ const checkCookieAvalible = (cookie) => {
             }
         };
         request(options, (error, response, body) => {
-            if(response.statusCode == 200){
+            if (response.statusCode == 200) {
                 return resolve(true)
             }
-            else{
+            else {
                 return resolve(false)
-            }     
+            }
         })
     });
 };
@@ -91,5 +93,36 @@ const login = (username, password) => {
     })
 }
 
+const getAccountInfo = (cookie) => {
+    return new Promise((resolve, reject) => {
+        let options = {
+            'method': 'GET',
+            'url': 'https://vzportal.merlot.aero/Crew/Employee/Edit',
+            'headers': {
+                'Cookie': cookie
+            }
+        };
+        request(options, (error, response, body) => {
+            if (error)
+                console.error('error getAccountInfo:', error);
 
-module.exports = { getCookie, checkCookieAvalible }
+            try {
+                const { document } = (new JSDOM(body)).window;
+                let name = document.getElementById("ProfileTab_KnownAs").value
+                let username = document.getElementById("ProfileTab_Username").value
+
+                return resolve({
+                    name: name,
+                    username: username
+                })
+            }
+            catch(e){
+                return reject(e)
+            }
+
+        })
+    });
+}
+
+
+module.exports = { getCookie, checkCookieAvalible, getAccountInfo }

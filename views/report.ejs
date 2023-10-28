@@ -45,6 +45,211 @@
             right: 0;
         }
     </style>
+
+    <style type="text/css">
+        .left {
+            text-align: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .highlight {
+            background-color: red;
+        }
+
+        .roster-report,
+        .roster-report table {
+            font: 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            padding: 0;
+            margin: 0;
+        }
+
+        .roster-report table {
+            width: 100%;
+            /* transform: scale(0.5); */
+        }
+
+        .roster-report th,
+        .roster-report td {
+            padding: 3px 5px;
+        }
+
+        .roster-report>thead table tr:first-child td {
+            background-color: #961432;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .roster-report>tbody table tr.odd td,
+        .roster-report>tbody table thead>tr th.odd {
+            background-color: #d3d3d3;
+            color: #000000;
+        }
+
+        .roster-report>tbody table tr:first-child th,
+        .roster-report>tbody table thead>tr th {
+            background-color: #961432;
+            color: #fff;
+        }
+
+        .roster-report>tbody table tr.blank td {
+            background-color: white;
+            padding: 1.5px;
+        }
+
+        .roster-report>tbody table tr.blankHighlight td:nth-child(5) {
+            background-color: red;
+            padding: 1.5px;
+        }
+
+        .roster-report>tbody table tr.pairingSummary td {
+            background-color: #7e7e7e
+        }
+
+        .roster-report>tbody table tr.pairingDetails td {
+            background-color: #9b9a9a;
+            height: 10px;
+        }
+
+        .roster-report>tbody table tr.totals td {
+            background-color: #FFF;
+        }
+
+        .roster-report>tbody table tr.totalsHeader {
+            background-color: #961432;
+            color: #fff;
+            font-weight: bold;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .roster-report>tbody table tr.separator {
+            height: 10px
+        }
+
+        .roster-report>tbody table tbody td {
+            font-size: 11px;
+        }
+
+        .roster-report>tbody table tfoot td {
+            background-color: #961432;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .page-separator {
+            height: 50px
+        }
+
+        .line-separator {
+            background-color: #961432;
+            height: 10px;
+        }
+
+        .crew-separator {
+            page-break-after: always;
+        }
+
+        .roster-report>tbody table tfoot tr:not(.odd) td {
+            color: #fff;
+        }
+
+        .roster-report>tfoot table td {
+            background-color: #961432;
+            color: #fff;
+        }
+
+        .roster-report>tfoot table td:first-child {
+            vertical-align: top;
+        }
+
+        .roster-report>tfoot table td:first-child+td {
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .roster-report>tfoot table td:first-child+td+td {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .roster-report td.dutyLabel {
+            text-align: center;
+        }
+
+        .printLink {
+            color: #d3d3d3;
+            font-size: 12px;
+        }
+
+        .leader-lined {
+            overflow: hidden;
+        }
+
+        .leader-lined span {
+            background: inherit;
+            padding: 0 4px 0 4px;
+        }
+
+        .leader-lined span:before {
+            width: 0;
+            float: left;
+            white-space: nowrap;
+            font-family: Symbol, Symbols;
+            content: "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        }
+
+        td.grid+td {
+            border-left: 1px solid #999;
+        }
+
+        @media print {
+            .printLink {
+                display: none;
+            }
+
+            .roster-report table {
+                font: 0.6em;
+            }
+
+            .roster-report>thead table tr:first-child td {
+                font-size: 0.6em;
+            }
+
+            .roster-report>tbody table tr:first-child th,
+            .roster-report>tbody table thead>tr th {
+                font-size: 0.6em;
+            }
+
+            .roster-report>tbody table tbody td {
+                font-size: 0.6em;
+            }
+
+            .roster-report>tbody table tr {
+                border: 1px solid #d3d3d3
+            }
+
+            @page {
+                size: landscape;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            /* For mobile phones: */
+            #table-report {
+            transform: scale(0.45);
+            transform-origin: top left;
+        }
+
+        }
+    </style>
 </head>
 
 
@@ -56,8 +261,11 @@
             <main>
                 <br>
                 <div class="container">
-                    <h2>AMITA SUKPHAN</h2>
-                    <p class="lead">Employee Code : TVJ2019</p>
+                    <h2>
+                        <%=name%>
+                    </h2>
+                    <p class="lead">Employee Code : <%=username%>
+                    </p>
                 </div>
 
                 <hr>
@@ -240,39 +448,24 @@
 
         <div class="b-example-divider"></div>
         <!-- Report -->
-        <div class="container table-responsive-sm ">
+        <div class="container ">
             <br>
             <h2>Report</h2>
-            <br>
-            <table class="table table-striped  table-bordered table-sm" id="tableReport">
-                <!-- <thead class="table-info">
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Report</th>
-                        <th scope="col">Flight Time</th>
-                        <th scope="col">Sector(s)/Event(s)</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    <tr>
-                        <td>Sun 01-Oct</td>
-                        <td>05:10</td>
-                        <td>5:15</td>
-                        <td>- 620 BKK 6:05 L SIN 9:30 L
-                            <br>
-                            - 621 SIN 10:41 L BKK 12:31 L
-                        </td>
-                    </tr>
+            <hr>
+            <div id="table-report">
+                <table class="roster-report">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table id="tableReport">
 
-                </tbody>
-                <tfoot>
-                    <!-- <tr>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Handle</th>
-                </tr> 
-                </tfoot>-->
-            </table>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 
@@ -284,6 +477,8 @@
             <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
         </div>
     </div>
+
+
 
 
 
@@ -325,7 +520,7 @@
             document.getElementById('total_layover_day').value = data.total.layover
         }
         const writeTable = (data) => {
-            console.log(data.tableHtml)
+            // console.log(data.tableHtml)
             document.getElementById("tableReport").innerHTML = data.tableHtml
         }
         const writeIncome = () => {
