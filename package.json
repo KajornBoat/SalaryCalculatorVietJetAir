@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "startEX": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "start": "nodemon ./app.js"
   },
   "dependencies": {
     "bootstrap": "^5.3.2",

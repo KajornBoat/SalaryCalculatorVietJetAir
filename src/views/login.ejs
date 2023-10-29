@@ -80,14 +80,14 @@
         password: password.value
       }
       var raw = JSON.stringify(payload);
-      fetch("http://" + window.location.host + "/login", {
+      fetch(window.location.href, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: raw,
       }).then((response) => {
         if(response.status == 200){
           document.getElementById("div-validate").className = "is-valid"
-          window.location.href = "http://" + window.location.host
+          window.location.href = window.location.href.replace("/login",'')
         }
         else if(response.status == 400){
           document.getElementById("div-validate").className = "is-invalid"

@@ -493,14 +493,14 @@
             let dateFromValue = document.getElementById("date-from").value
             let dateToValue = document.getElementById("date-to").value
 
-            fetch("http://" + window.location.host + "/data" + `?from=${dateFromValue}&to=${dateToValue}`, {
+            fetch(window.location.href + "data" + `?from=${dateFromValue}&to=${dateToValue}`, {
                 method: "GET",
             }).then((response) => {
                 if (response.status == 200 || response.status == 304) {
                     return response.json()
                 }
                 else {
-                    window.location.href = "http://" + window.location.host + '/login'
+                    window.location.href +='login'
                 }
             }).then(data => {
                 writeSumaryReport(data)
